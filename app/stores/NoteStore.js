@@ -7,7 +7,18 @@ class NoteStore {
     this.bindActions(NoteActions);
 
     this.notes = []
+
+    this.exportPublicMethods({
+      getNotesByIds: this.getNotesByIds.bind(this)
+    });
   }
+
+  getNotesByIds(ids) {
+    return (ids || []).map(
+      id => this.notes.filter(note => note.id === id)
+      ).filter(a => a.length).map(a => a[0]);
+  }
+
   create(note) {
     const notes = this.notes;
 
@@ -16,6 +27,8 @@ class NoteStore {
     this.setState({
       notes: notes.concat(note)
     })
+
+    return note;
   }
 
   update(updatedNote) {

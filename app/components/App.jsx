@@ -1,47 +1,32 @@
 import AltContainer from 'alt-container';
 import React from 'react';
-import Notes from './Notes.jsx';
-import NoteActions from '../actions/NoteActions';
-import NoteStore from '../stores/NoteStore';
+import {DragDropContext} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import Lanes from './Lanes.jsx';
+import LaneActions from '../actions/LaneActions';
+import LaneStore from '../stores/LaneStore';
 
-
+@DragDropContext(HTML5Backend)
 export default  class App extends React.Component {
-
   render() {
-
     return (
       <div>
-        <button className="add-note" onClick={this.addNote}>+</button>
+        <button className="add-lane" onClick={this.addLane}>+</button>
 
         <AltContainer
-          stores={[NoteStore]}
+          stores={[LaneStore]}
           inject={{
-            notes: () => NoteStore.getState().notes
+            lanes: () => LaneStore.getState().lanes || []
           }}
         >
-          <Notes notes={notes}
-            onEdit={this.editNote}
-            onDelete={this.deleteNote} />
+          <Lanes />
         </AltContainer>
       </div>
       );
   }
 
-  deleteNote(id, e) {
-    e.stopPropagation();
-
-    NoteActions.delete(id);
-  }
-
-  addNote = () => {
-    NoteActions.create({task: 'New Task'});
-  };
-
-  editNote(id, task) {
-    if(!task.trim()) {
-      return;
-    }
-
-    NoteActions.update({id, task})
+  addLane() {
+    console.log("test");
+    LaneActions.create({name: 'Name Lane'});
   }
 }
