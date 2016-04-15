@@ -19,8 +19,6 @@ const noteTarget = {
     if(sourceId !== targetId) {
       targetProps.onMove({sourceId, targetId});
     }
-
-    console.log('dragging note', sourceProps, targetProps);
   }
 };
 
