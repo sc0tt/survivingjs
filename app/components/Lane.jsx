@@ -1,6 +1,6 @@
 import AltContainer from 'alt-container';
 import React from 'react';
-import Notes from './Notes';
+import Notes from './Notes.jsx';
 import NoteActions from '../actions/NoteActions';
 import NoteStore from '../stores/NoteStore';
 import LaneActions from '../actions/LaneActions';
@@ -14,7 +14,10 @@ const noteTarget = {
     const sourceId = sourceProps.id;
 
     if(!targetProps.lane.notes.length) {
-      console.log(`source: ${sourceId}, target: ${targetId}`);
+      LaneActions.attachToLane({
+        laneId: targetProps.lane.id,
+        noteId: sourceId
+      });
     }
   }
 };
@@ -26,7 +29,7 @@ export default class Lane extends React.Component {
   render() {
     const {connectDropTarget, lane, ...props} = this.props;
 
-    return (
+    return connectDropTarget(
       <div {...props}>
         <div className="lane-header" onClick={this.activateLaneEdit}>
           <div className="lane-add-note">
@@ -72,7 +75,10 @@ export default class Lane extends React.Component {
   deleteNote = (id, e) => {
     e.stopPropagation();
 
-    NoteActions.delete(id);
+    const laneId = this.props.lane.id;
+
+    LaneActions.detatchFromLane({laneId, noteId});
+    NoteActions.delete(noteId);
   };
 
   addNote = (e) => {
